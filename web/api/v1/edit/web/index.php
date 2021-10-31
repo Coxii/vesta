@@ -277,7 +277,7 @@ if (!empty($_POST['save'])) {
     }
 
     // Change document root for ssl domain
-    if (( $v_ssl == 'yes') && (!empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
+    if (( $v_ssl == 'yes') && (!empty($_POST['v_ssl_home'])) && (empty($_SESSION['error_msg']))) {
         if ( $v_ssl_home != $_POST['v_ssl_home'] ) {
             $v_ssl_home = escapeshellarg($_POST['v_ssl_home']);
             exec (VESTA_CMD."v-change-web-domain-sslhome ".$user." ".$v_domain." ".$v_ssl_home." no", $output, $return_var);
@@ -290,7 +290,7 @@ if (!empty($_POST['save'])) {
     }
 
     // Change SSL certificate
-    if (( $v_letsencrypt == 'no' ) && (empty($_POST['v_letsencrypt'])) && ( $v_ssl == 'yes' ) && (!empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
+    if (( $v_letsencrypt == 'no' ) && (empty($_POST['v_letsencrypt'])) && ( $v_ssl == 'yes' ) && (!empty($_POST['v_ssl_home'])) && (empty($_SESSION['error_msg']))) {
         if (( $v_ssl_crt != str_replace("\r\n", "\n",  $_POST['v_ssl_crt'])) || ( $v_ssl_key != str_replace("\r\n", "\n",  $_POST['v_ssl_key'])) || ( $v_ssl_ca != str_replace("\r\n", "\n",  $_POST['v_ssl_ca']))) {
             exec ('mktemp -d', $mktemp_output, $return_var);
             $tmpdir = $mktemp_output[0];
@@ -363,7 +363,7 @@ if (!empty($_POST['save'])) {
     }
 
     // Delete SSL certificate
-    if (( $v_ssl == 'yes' ) && (empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
+    if (( $v_ssl == 'yes' ) && (empty($_POST['v_ssl_home'])) && (empty($_SESSION['error_msg']))) {
         exec (VESTA_CMD."v-delete-web-domain-ssl ".$v_username." ".$v_domain." no", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
@@ -376,7 +376,7 @@ if (!empty($_POST['save'])) {
     }
 
     // Add Lets Encrypt support
-    if ((!empty($_POST['v_ssl'])) && ( $v_letsencrypt == 'no' ) && (!empty($_POST['v_letsencrypt'])) && empty($_SESSION['error_msg'])) {
+    if ((!empty($_POST['v_ssl_home'])) && ( $v_letsencrypt == 'no' ) && (!empty($_POST['v_letsencrypt'])) && empty($_SESSION['error_msg'])) {
         $l_aliases = str_replace("\n", ',', $v_aliases);
         exec (VESTA_CMD."v-add-letsencrypt-domain ".$user." ".$v_domain." ".escapeshellarg($l_aliases)." no", $output, $return_var);
         check_return_code($return_var,$output);
@@ -388,7 +388,7 @@ if (!empty($_POST['save'])) {
      }
 
      // Add SSL certificate
-     if (( $v_ssl == 'no' ) && (!empty($_POST['v_ssl']))  && (empty($v_letsencrypt_deleted)) && (empty($_SESSION['error_msg']))) {
+     if (( $v_ssl == 'no' ) && (!empty($_POST['v_ssl_home']))  && (empty($v_letsencrypt_deleted)) && (empty($_SESSION['error_msg']))) {
         if (empty($_POST['v_ssl_crt'])) $errors[] = 'ssl certificate';
         if (empty($_POST['v_ssl_key'])) $errors[] = 'ssl key';
         if (empty($_POST['v_ssl_home'])) $errors[] = 'ssl home';
